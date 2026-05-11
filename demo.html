@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Gallery System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  font-family: Arial;
+  background:linear-gradient(135deg,#ff4b7d,#7f00ff);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.container{
+  background:#fff;
+  width:360px;
+  padding:20px;
+  border-radius:10px;
+}
+input,button{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+}
+button{
+  background:#ff4b7d;
+  color:#fff;
+  border:none;
+}
+.hide{display:none;}
+.file-box{
+  margin:10px 0;
+  position:relative;
+}
+.file-box button{
+  position:absolute;
+  top:0;right:0;
+  background:red;
+  width:auto;
+  padding:5px;
+}
+img,video{
+  width:100%;
+  border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- LOGIN -->
+<div id="loginBox">
+  <h3>Login</h3>
+  <input id="loginEmail" placeholder="Email">
+  <input id="loginPassword" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <p onclick="toggle()" style="cursor:pointer;color:#7f00ff">Create account</p>
+</div>
+
+<!-- SIGNUP -->
+<div id="signupBox" class="hide">
+  <h3>Sign Up</h3>
+  <input id="signupName" placeholder="Name">
+  <input id="signupEmail" placeholder="Email">
+  <input id="signupPassword" type="password" placeholder="Password">
+  <button onclick="signup()">Signup</button>
+  <p onclick="toggle()" style="cursor:pointer;color:#7f00ff">Back to login</p>
+</div>
+
+<!-- GALLERY -->
+<div id="galleryBox" class="hide">
+  <h3>Gallery</h3>
+
+  <input type="file" multiple onchange="uploadFiles(event)" id="upload" class="hide">
+
+  <div id="gallery"></div>
+
+  <button onclick="logout()">Logout</button>
+</div>
+
+</div>
+
+<script>
+let files = JSON.parse(localStorage.getItem("galleryFiles")) || [];
+let isAdmin = false;
+
+function toggle(){
+  loginBox.classList.toggle("hide");
+  signupBox.classList.toggle("hide");
+}
+
+function signup(){
+  localStorage.setItem("galleryUser",
+    JSON.stringify({
+      email:signupEmail.value,
+      password:signupPassword.value
+    })
+  );
+  alert("Signup successful");
+  toggle();
+}
+
+function login(){
+  // ADMIN LOGIN
+  if(loginEmail.value==="admin@gmail.com" &&
+     loginPassword.value==="admin123"){
+    isAdmin=true;
+    openGallery();
+    return;
+  }
+
+  let user = JSON.parse(localStorage.getItem("galleryUser"));
+  if(!user) return alert("No user found");
+
+  if(loginEmail.value===user.email &&
+     loginPassword.value===user.password){
+    isAdmin=false;
+    openGallery();
+  }else{
+    alert("Invalid login");
+  }
+}
+
+function openGallery(){
+  loginBox.classList.add("hide");
+  signupBox.classList.add("hide");
+  galleryBox.classList.remove("hide");
+  if(isAdmin) upload.classList.remove("hide");
+  render();
+}
+
+function uploadFiles(e){
+  [...e.target.files].forEach(f=>{
+    let r=new FileReader();
+    r.onload=()=>{
+      files.push({name:f.name,type:f.type,data:r.result});
+      localStorage.setItem("galleryFiles",JSON.stringify(files));
+      render();
+    }
+    r.readAsDataURL(f);
+  });
+}
+
+function render(){
+  gallery.innerHTML="";
+  files.forEach((f,i)=>{
+    gallery.innerHTML+=`
+      <div class="file-box">
+        ${preview(f)}
+        ${isAdmin?`<button onclick="del(${i})">X</button>`:""}
+      </div>`;
+  });
+}
+
+function preview(f){
+  if(f.type.startsWith("image")) return `<img src="${f.data}">`;
+  if(f.type.startsWith("video")) return `<video src="${f.data}" controls></video>`;
+  return `<a href="${f.data}" download>${f.name}</a>`;
+}
+
+function del(i){
+  if(confirm("Delete this file?")){
+    files.splice(i,1);
+    localStorage.setItem("galleryFiles",JSON.stringify(files));
+    render();
+  }
+}
+
+function logout(){
+  location.reload();
+}
+</script>
+
+</body>
+</html>

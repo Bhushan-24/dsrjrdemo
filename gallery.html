@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Gallery Login & Signup</title>
+      <link rel="icon" href="companylogo.jpg" type="image/png">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+
+
+
+
+body{
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg,#ff4b7d,#7f00ff);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.container{
+  background:#fff;
+  width:350px;
+  padding:25px;
+  border-radius:10px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+h2{text-align:center;margin-bottom:20px;}
+
+input{
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+  border:1px solid #ccc;
+  border-radius:5px;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  background:#ff4b7d;
+  color:#fff;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+  font-size:16px;
+}
+
+button:hover{background:#e13b6c;}
+
+.toggle{
+  text-align:center;
+  margin-top:15px;
+  cursor:pointer;
+  color:#7f00ff;
+}
+
+.hide{display:none;}
+</style>
+</head>
+
+<body>
+
+
+<div class="container">
+  <!-- LOGIN -->
+  <div id="loginBox">
+    <h2>Login</h2>
+
+        <input type="email" id="loginEmail" placeholder="Email">
+
+   
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button onclick="login()">Login</button>
+
+  <!-- SIGNUP -->
+  <div id="signupBox" class="hide">
+    <h2>Sign Up</h2>
+    <input type="text" id="signupName" placeholder="Full Name">
+    <input type="email" id="signupEmail" placeholder="Email">
+    <input type="password" id="signupPassword" placeholder="Password">
+    <button onclick="signup()">Sign Up</button>
+    <div class="toggle" onclick="showLogin()">Already have an account?</div>
+  </div>
+</div>
+
+<script>
+function showSignup(){
+  document.getElementById("loginBox").classList.add("hide");
+  document.getElementById("signupBox").classList.remove("hide");
+}
+
+function showLogin(){
+  document.getElementById("signupBox").classList.add("hide");
+  document.getElementById("loginBox").classList.remove("hide");
+}
+
+
+  localStorage.setItem("galleryUser", JSON.stringify(user));
+  alert("Signup Successful!");
+  showLogin();
+
+
+function login(){
+  let savedUser = JSON.parse(localStorage.getItem("galleryUser"));
+
+  if(!savedUser){
+    alert("No user found. Please sign up!");
+    return;
+  }
+
+  if(loginEmail.value === savedUser.email &&
+     loginPassword.value === savedUser.password){
+       window.location.href = "updategallery.html";
+  }else{
+    alert("Invalid login details");
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Login | Gallery</title>
+<link rel="icon" href="companylogo.jpg" type="image/png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Google Sign-In -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+body{
+  background: linear-gradient(135deg,#0d6efd,#6610f2);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.login-card{
+  background:#fff;
+  padding:30px;
+  border-radius:12px;
+  width:100%;
+  max-width:400px;
+  box-shadow:0 15px 50px rgba(0,0,0,0.2);
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-card">
+  <h4 class="text-center mb-4">Gallery Login</h4>
+
+  <!-- ADMIN LOGIN -->
+  <h6 class="text-primary">Admin Login</h6>
+  <div class="mb-3">
+    <label class="form-label">Mobile Number</label>
+    <input type="tel" id="mobile" class="form-control" placeholder="Enter admin mobile">
+  </div>
+  <button class="btn btn-primary w-100 mb-3" onclick="adminLogin()">Admin Login</button>
+
+  <hr>
+
+  <!-- USER LOGIN -->
+  <h6 class="text-success text-center mb-2">User Login with Gmail</h6>
+
+  <div id="g_id_onload"
+       data-client_id="YOUR_GOOGLE_CLIENT_ID"
+       data-callback="handleCredentialResponse">
+  </div>
+
+  <div class="g_id_signin"
+       data-type="standard"
+       data-size="large"
+       data-theme="outline"
+       data-width="100%">
+  </div>
+
+  <p id="msg" class="text-danger text-center mt-3"></p>
+</div>
+
+<script>
+/* Admin Mobile */
+const ADMIN_MOBILE = "9160684218";
+
+function adminLogin(){
+  let mobile = document.getElementById("mobile").value.trim();
+  let msg = document.getElementById("msg");
+
+  let mobilePattern = /^[6-9]\d{9}$/;
+
+  if(!mobilePattern.test(mobile)){
+    msg.innerText = "Enter valid 10-digit mobile number";
+    return;
+  }
+
+  if(mobile === ADMIN_MOBILE){
+    localStorage.setItem("loginRole", "admin");
+    window.location.href = "updategallery.html";
+  } else {
+    msg.innerText = "Unauthorized Admin Number";
+  }
+}
+
+/* Google User Login */
+function handleCredentialResponse(response) {
+  const data = parseJwt(response.credential);
+
+  // Optional: restrict to specific Gmail IDs
+  // const allowedEmails = ["user1@gmail.com","user2@gmail.com"];
+  // if(!allowedEmails.includes(data.email)){ return; }
+
+  localStorage.setItem("loginRole", "user");
+  localStorage.setItem("userEmail", data.email);
+
+  window.location.href = "updategallery.html";
+}
+
+/* Decode JWT */
+function parseJwt(token) {
+  let base64Url = token.split('.')[1];
+  let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+  return JSON.parse(jsonPayload);
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DSL & JR Foundation</title>
+      <link rel="icon" href="companylogo.jpg" type="image/png">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+body{
+  background:darkblue;
+}
+
+.navbar{
+  background-color:darkmagenta;
+}
+
+.navbar-brand{
+  font-size:22px;
+  font-weight:600;
+  color:white;
+}
+
+.navbar-brand img{
+  height:40px;
+  margin-right:10px;
+}
+
+.gallery-card img,
+.gallery-card video{
+  height:100%;
+  object-fit:cover;
+}
+
+.nav-link{
+  font-weight:500;
+  color:orangered !important;
+}
+
+.nav-link:hover{
+  color:#0d6efd !important;
+}
+
+@media (max-width: 576px) {
+  .navbar .btn {
+    width: 100%;
+  }
+}
+
+
+
+</style>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg px-4 shadow-sm">
+  
+  <a class="navbar-brand d-flex align-items-center" href="#">
+    <img src="companylogo.jpg">
+    DSL & JR Foundation
+  </a>
+
+  <!-- TOGGLER BUTTON (VERY IMPORTANT) -->
+  <button class="navbar-toggler" type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="mainNavbar">
+
+    <!-- LEFT MENU -->
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-4">
+      <li class="nav-item">
+        <a class="nav-link active" href="index.html">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#gallery">Gallery</a>
+      </li>
+    </ul>
+
+    <!-- RIGHT BUTTONS -->
+    <div class="d-flex gap-2 flex-wrap">
+      <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#imageModal">Image</button>
+      <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#videoModal">Video</button>
+      <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#docModal">Document</button>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+<!-- GALLERY -->
+<div class="container my-4">
+  <h3 class="text-center mb-4" style="color:darkorange">Our Gallery</h3>
+  <div class="row" id="gallery"></div>
+</div>
+
+<!-- IMAGE MODAL -->
+<div class="modal fade" id="imageModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5>Upload Image</h5></div>
+      <div class="modal-body">
+        <input type="file" id="imageInput" class="form-control" accept="image/*">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="uploadImage()">Upload</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="modal fade" id="videoModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5>Upload Video</h5></div>
+      <div class="modal-body">
+        <input type="file" id="videoInput" class="form-control" accept="video/*">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" onclick="uploadVideo()">Upload</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DOCUMENT MODAL -->
+<div class="modal fade" id="docModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5>Upload Document</h5></div>
+      <div class="modal-body">
+        <input type="file" id="docInput" class="form-control" accept=".pdf,.doc,.docx">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-warning" onclick="uploadDocument()">Upload</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</nav>
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+const isAdmin = localStorage.getItem("isAdmin") === "true";
+
+/* IMAGE */
+function uploadImage(){
+  if(!isAdmin) return alert("Admin only access");
+
+  const file = imageInput.files[0];
+  if(!file) return alert("Select image");
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    galleryData.push({type:"image", src:reader.result});
+    saveGallery();
+  };
+  reader.readAsDataURL(file);
+}
+
+/* VIDEO */
+function uploadVideo(){
+  if(!isAdmin) return alert("Admin only access");
+
+  const file = videoInput.files[0];
+  if(!file) return alert("Select video");
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    galleryData.push({type:"video", src:reader.result});
+    saveGallery();
+  };
+  reader.readAsDataURL(file);
+}
+
+/* DOCUMENT */
+function uploadDocument(){
+  if(!isAdmin) return alert("Admin only access");
+
+  const file = docInput.files[0];
+  if(!file) return alert("Select document");
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    galleryData.push({
+      type:"document",
+      src:reader.result,
+      name:file.name
+    });
+    saveGallery();
+  };
+  reader.readAsDataURL(file);
+}
+
+function deleteItem(i){
+  if(!isAdmin){
+    alert("Admin only access");
+    return;
+  }
+
+  if(confirm("Delete item?")){
+    galleryData.splice(i,1);
+    saveGallery();
+  }
+}
+
+
+
+function renderGallery(){
+  gallery.innerHTML = "";
+
+  galleryData.forEach((item,i)=>{
+    let content = "";
+
+    if(item.type === "image"){
+      content = `<img src="${item.src}" class="card-img-top">`;
+    }
+    else if(item.type === "video"){
+      content = `<video src="${item.src}" controls class="w-100"></video>`;
+    }
+    else{
+      content = `
+        <div class="text-center p-4">
+          <i class="bi bi-file-earmark-text fs-1"></i>
+          <p>${item.name}</p>
+          <a href="${item.src}" download class="btn btn-sm btn-success">Download</a>
+        </div>`;
+    }
+
+    gallery.innerHTML += `
+    <div class="col-md-4 mb-4">
+      <div class="card gallery-card shadow">
+        ${content}
+
+        ${isAdmin ? `
+        <div class="card-body text-center">
+          <button class="btn btn-danger btn-sm" onclick="deleteItem(${i})">Delete</button>
+        </div>` : ``}
+
+      </div>
+    </div>`;
+  });
+}
+
+
+let galleryData = JSON.parse(localStorage.getItem("gallery")) || [];
+
+/* SAVE + RENDER */
+function saveGallery(){
+  localStorage.setItem("gallery", JSON.stringify(galleryData));
+  renderGallery();
+}
+
+/* IMAGE */
+function uploadImage(){
+  const file = imageInput.files[0];
+  if(!file) return alert("Select image");
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    galleryData.push({type:"image", src:reader.result});
+    saveGallery();
+  };
+  reader.readAsDataURL(file);
+}
+
+
+/* DELETE */
+function deleteItem(i){
+  if(confirm("Delete item?")){
+    galleryData.splice(i,1);
+    saveGallery();
+  }
+}
+
+/* VIDEO */
+function uploadVideo(){
+  const file = videoInput.files[0];
+  if(!file) return alert("Select video");
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    galleryData.push({type:"video", src:reader.result});
+    saveGallery();
+  };
+  reader.readAsDataURL(file);
+}
+
+/* DOCUMENT */
+function uploadDocument(){
+  const file = docInput.files[0];
+  if(!file) return alert("Select document");
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    galleryData.push({
+      type:"document",
+      src:reader.result,
+      name:file.name
+    });
+    saveGallery();
+  };
+  reader.readAsDataURL(file);
+}
+
+
+/* RENDER */
+function renderGallery(){
+  gallery.innerHTML = "";
+
+  galleryData.forEach((item,i)=>{
+    let content = "";
+
+    if(item.type === "image"){
+      content = `<img src="${item.src}" class="card-img-top">`;
+    }
+    else if(item.type === "video"){
+      content = `<video src="${item.src}" controls class="w-100"></video>`;
+    }
+    else{
+      content = `
+        <div class="text-center p-4">
+          <i class="bi bi-file-earmark-text fs-1"></i>
+          <p>${item.name}</p>
+          <a href="${item.src}" download class="btn btn-sm btn-success">Download</a>
+        </div>`;
+    }
+
+    gallery.innerHTML += `
+    <div class="col-md-4 mb-4">
+      <div class="card gallery-card shadow">
+        ${content}
+        <div class="card-body text-center">
+          <button class="btn btn-danger btn-sm" onclick="deleteItem(${i})">Delete</button>
+        </div>
+      </div>
+    </div>`;
+  });
+}
+
+renderGallery();
+
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login Form</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f5f7fb;
+}
+
+/* ===== CARD ===== */
+.card{
+    width:320px;
+    background:#fff;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.15);
+}
+
+.card h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+/* ===== TOGGLE ===== */
+.toggle{
+    display:flex;
+    background:#f1f1f1;
+    border-radius:30px;
+    margin-bottom:20px;
+}
+
+.toggle button{
+    flex:1;
+    padding:10px;
+    border:none;
+    background:transparent;
+    cursor:pointer;
+    border-radius:30px;
+    font-weight:bold;
+}
+
+.toggle .active{
+    background:linear-gradient(135deg,#0a4bbf,#0f6bdc);
+    color:#fff;
+}
+
+/* ===== INPUTS ===== */
+.input-box{
+    margin-bottom:15px;
+}
+
+.input-box input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    outline:none;
+}
+
+/* ===== LINKS ===== */
+.forgot{
+    font-size:14px;
+    color:#1e6cff;
+    text-decoration:none;
+    display:inline-block;
+    margin-bottom:15px;
+}
+
+/* ===== BUTTON ===== */
+.submit-btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:25px;
+    background:linear-gradient(135deg,#0a4bbf,#0f6bdc);
+    color:#fff;
+    font-size:16px;
+    cursor:pointer;
+}
+
+/* ===== FOOTER ===== */
+.footer{
+    margin-top:15px;
+    text-align:center;
+    font-size:14px;
+}
+
+.footer a{
+    color:#1e6cff;
+    text-decoration:none;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Login Form</h2>
+
+    <!-- Toggle -->
+    <div class="toggle">
+        <button id="loginTab" class="active" onclick="showLogin()">Login</button>
+        <button id="signupTab" onclick="showSignup()">Signup</button>
+    </div>
+
+    <!-- Login Form -->
+    <div id="loginForm">
+        <div class="input-box">
+            <input type="email" placeholder="Email Address">
+        </div>
+        <div class="input-box">
+            <input type="password" placeholder="Password">
+        </div>
+        <a href="#" class="forgot">Forgot password?</a>
+        <button class="submit-btn">Login</button>
+    </div>
+
+    <!-- Signup Form -->
+    <div id="signupForm" style="display:none;">
+        <div class="input-box">
+            <input type="text" placeholder="Full Name">
+        </div>
+        <div class="input-box">
+            <input type="email" placeholder="Email Address">
+        </div>
+        <div class="input-box">
+            <input type="password" placeholder="Password">
+        </div>
+        <button class="submit-btn">Signup</button>
+    </div>
+
+    <div class="footer">
+        Create an account <a href="#" onclick="showSignup()">Signup now</a>
+    </div>
+</div>
+
+<script>
+function showLogin(){
+    document.getElementById("loginForm").style.display = "block";
+    document.getElementById("signupForm").style.display = "none";
+    document.getElementById("loginTab").classList.add("active");
+    document.getElementById("signupTab").classList.remove("active");
+}
+
+function showSignup(){
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("signupForm").style.display = "block";
+    document.getElementById("signupTab").classList.add("active");
+    document.getElementById("loginTab").classList.remove("active");
+}
+</script>
+
+</body>
+</html>

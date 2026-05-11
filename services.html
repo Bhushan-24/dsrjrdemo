@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DsrJrFoundation | Services</title>
+      <link rel="icon" href="companylogo.jpg" type="image/png">
+
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial;
+}
+
+body{
+    background:#f4f4f4;
+}
+
+nav{
+    background:#111;
+    padding:15px 20px;
+}
+
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo{
+    color:#fff;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.menu{
+    display:flex;
+    list-style:none;
+}
+
+.menu li{
+    position:relative;
+}
+
+.menu li a{
+    color:#fff;
+    text-decoration:none;
+    padding:12px 15px;
+    display:block;
+}
+
+.menu li a:hover{
+    background:#333;
+}
+
+/* Dropdown */
+.dropdown{
+    display:none;
+    position:absolute;
+    background:#222;
+    top:45px;
+    left:0;
+    min-width:180px;
+}
+
+.dropdown a{
+    padding:12px;
+}
+
+/* Show dropdown desktop */
+.menu li:hover .dropdown{
+    display:block;
+}
+
+/* Mobile Menu Button */
+.menu-btn{
+    display:none;
+    font-size:28px;
+    color:white;
+    cursor:pointer;
+}
+
+/* Mobile View */
+@media(max-width:768px){
+
+    .menu-btn{
+        display:block;
+    }
+
+    .menu{
+        display:none;
+        flex-direction:column;
+        width:100%;
+        background:#111;
+        margin-top:15px;
+    }
+
+    .menu.active{
+        display:flex;
+    }
+
+    .menu li{
+        width:100%;
+    }
+
+    .dropdown{
+        position:static;
+        width:100%;
+    }
+
+    /* Remove hover for mobile */
+    .menu li:hover .dropdown{
+        display:none;
+    }
+
+    .dropdown.show{
+        display:block;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="navbar">
+         <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="companylogo.jpg" height="40" class="me-2">
+    </a>
+
+        <div class="menu-btn" onclick="toggleMenu()">
+            ☰
+        </div>
+
+        <ul class="menu" id="menu">
+            <li><a href="index.html">Home</a></li>
+
+            <li>
+                <a href="#" onclick="toggleDropdown(event)">
+                    Services ▼
+                </a>
+
+                <div class="dropdown" id="serviceDropdown">
+                    <a href="#">Web Design</a>
+                    <a href="#">Development</a>
+                    <a href="#">SEO</a>
+                </div>
+            </li>
+
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </div>
+</nav>
+
+<script>
+function toggleMenu(){
+    document.getElementById("menu").classList.toggle("active");
+}
+
+function toggleDropdown(event){
+    if(window.innerWidth <= 768){
+        event.preventDefault();
+        document.getElementById("serviceDropdown")
+        .classList.toggle("show");
+    }
+}
+</script>
+
+</body>
+</html>
